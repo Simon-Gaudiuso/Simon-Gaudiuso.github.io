@@ -136,9 +136,8 @@ var pluginName = "ik_suggest",
                 if (selected.length) {
                     msg = selected.removeClass('selected').prev().addClass('selected').text();
                 }
-                plugin.notify.text(msg);  // add suggestion text to live region to be read by screen reader    
+                plugin.notify.text(msg); // add suggestion text to live region to be read by screen reader
                 break;
-
             default: // get suggestions based on user input
                 plugin.list.empty();
                 suggestions = plugin.getSuggestions(plugin.options.source, $me.val());
@@ -155,8 +154,9 @@ var pluginName = "ik_suggest",
 
                 break;
         }
+            
 
-	};
+	}
 	
 	/** 
 	 * Handles fosucout event on text field.

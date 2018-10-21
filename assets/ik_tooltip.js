@@ -33,19 +33,27 @@
 		
 		if(tip.length > 0) {
 			
-			$tooltip = $('<span/>') // create tooltip
-				.text(tip)
-				.addClass('ik_tooltip')
-				.attr({
-					'id': id,
-				});
+            $tooltip = $('<span/>') // create tooltip
+                .text(tip)
+                .addClass('ik_tooltip')
+                .attr({
+                    'id': id//,
+         'role': 'tooltip', // assign tooltip role
+                    'aria-hidden': 'true', // hide it from screen reader to prevent it from been read twice
+                    'aria-live': 'polite' // make it live region
+                });
+
+
 			
-			$elem
-				.css('position', 'relative')
-				.removeAttr('title') // remove title to prevent it from being read
-				.after($tooltip)
-				.on('mouseover', function(event) {
-					
+            $elem
+                .attr({
+                    'tabindex': 0 // add tab order
+                })
+                .css('position', 'relative')
+                .removeAttr('title') // remove title to prevent it from being read
+                .after($tooltip)
+                //.on('mouseover', function(event) {
+                .on('mouseover focus', function (event) {		
 					var y, x;
 					
 					y = $elem.position().top - $tooltip.height() - 20;
@@ -61,22 +69,35 @@
 						$tooltip.addClass('mouseover'); // add mouseover class when mouse moves over the current element
 					}
 					
-					$tooltip // position and show tooltip
-						.css({
-							'top': y, 
-							'left': x
-						})
-						.addClass('visible');
+                    $tooltip // position and show tooltip
+                        .attr({
+                            'aria-hidden': 'false'
+                        })
+                        .css({
+                            'top': y,
+                            'left': x
+                        })
+                        .addClass('visible');
 				})
-				.on('mouseout', function(event) {
-					
-					if (!$(event.currentTarget).is(':focus') ) { // hide tooltip if current element is not focused
-						
-						$tooltip
-							.removeClass('visible mouseover');					
-					}
-										
-				})
+                .on('mouseout', function (event) {
+                    if (!$(event.currentTarget).is(':focus')) { // hide tooltip if current element is not focused     
+                        $tooltip
+                            .attr({
+                                'aria-hidden': 'true'
+                            })
+                            .removeClass('visible mouseover');
+                    }
+                })
+                .on('mouseout', function (event) {
+                    if (!$(event.currentTarget).is(':focus')) { // hide tooltip if current element is not focused     
+                        $tooltip
+                            .attr({
+                                'aria-hidden': 'true'
+                            })
+                            .removeClass('visible mouseover');
+                    }
+                })
+
 		}
 	};
 	
