@@ -90,30 +90,44 @@ this.headers = $elem.children('dt').each(function(i, el) {
 		$elem = $(plugin.element);
 		$me = $(event.target);
 		$panel = $me.parent('dt').next();
+
+        if (plugin.options.autoCollapse) { // expand current panel and collapse the rest
+
+            plugin.headers.each(function (i, el) {
+                var $hdr, $btn;
+
+                $hdr = $(el);
+                $btn = $hdr.find('.button');
+
+                if ($btn[0] != $(event.currentTarget)[0]) {
+                    $btn.removeClass('expanded');
+                    $btn.attr('aria-expanded', 'false');
+                    $btn.parent('dt').next().attr('aria-hidden', 'true');
+                    $hdr.next().slideUp(plugin.options.animationSpeed);
+                } else {
+                    $btn.addClass('expanded');
+                    $btn.attr('aria-expanded', 'true');
+                    $btn.parent('dt').next().attr('aria-hidden', 'false');
+                    $hdr.next().slideDown(plugin.options.animationSpeed);
+                }
+            });
+
+        } else { // toggle current panel depending on the state
+
+            isVisible = !!$panel.is(':visible');
+            $panel.slideToggle({ duration: plugin.options.animationSpeed });
+            if (isVisible) {
+                $me.attr('aria-expanded', 'false');
+                $me.parent('dt').next().attr('aria-hidden', 'true');
+            } else {
+                $me.attr('aria-expanded', 'true');
+                $me.parent('dt').next().attr('aria-hidden', 'false');
+            }
+
+        }
 		
-		if(plugin.options.autoCollapse) { // expand current panel and collapse the rest
-			
-			plugin.headers.each(function(i, el) {
-				var $hdr, $btn; 
-				
-				$hdr = $(el);
-				$btn = $hdr.find('.button');
-				
-				if($btn[0] != $(event.currentTarget)[0]) { 
-					$btn.removeClass('expanded');
-					$hdr.next().slideUp(plugin.options.animationSpeed);
-				} else { 
-					$btn.addClass('expanded');
-					$hdr.next().slideDown(plugin.options.animationSpeed);
-				}
-			});
-			
-		} else { // toggle current panel depending on the state
-		
-			isVisible = !!$panel.is(':visible');
-			$panel.slideToggle({ duration: plugin.options.animationSpeed });
-			
-		}
+
+
 	};
 
     /**
